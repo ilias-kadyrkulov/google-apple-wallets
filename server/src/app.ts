@@ -8,7 +8,7 @@ const jsonBodyMiddleware = express.json()
 
 app.use(jsonBodyMiddleware)
 app.use(cors())
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static('uploads'))
 app.use('/loyalty', getLoyaltyRoutes())
 
 app.listen(PORT, () => {
