@@ -724,7 +724,7 @@ class DemoLoyalty {
             programLogo: {
                 sourceUri: {
                     uri:
-                        'https://google-apple-wallets.vercel.app/uploads/' +
+                        'https://google-apple-wallets-server.vercel.app/uploads/' +
                             googlePayLogoImage ||
                         'http://farm8.staticflickr.com/7340/11177041185_a61a7f2139_o.jpg',
                 },
@@ -746,7 +746,7 @@ class DemoLoyalty {
             heroImage: {
                 sourceUri: {
                     uri:
-                        'https://google-apple-wallets.vercel.app/uploads/' +
+                        'https://google-apple-wallets-server.vercel.app/uploads/' +
                             googlePayHeroImage ||
                         'https://farm4.staticflickr.com/3723/11177041115_6e6a3b6f49_o.jpg',
                 },
