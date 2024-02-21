@@ -12,11 +12,6 @@
     ],
     "routes": [
         {
-            "handle": "filesystem",
-            "src": "uploads/(.*)",
-            "destination": "uploads/$1"
-        },
-        {
             "src": "/(.*)",
             "dest": "src/app.ts"
         }
