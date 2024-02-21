@@ -27,7 +27,7 @@ import { TReqBody } from './routes/types'
  */
 
 class DemoLoyalty {
-    keyFilePath: string
+    // keyFilePath: string
     baseUrl: string
     batchUrl: string
     classUrl: string
@@ -58,8 +58,8 @@ class DemoLoyalty {
             date: this.oneWeekLater.toISOString(),
         }
 
-        this.keyFilePath =
-            process.env.GOOGLE_APPLICATION_CREDENTIALS || '/path/to/key.json'
+        // this.keyFilePath =
+        //     process.env.GOOGLE_APPLICATION_CREDENTIALS || '/path/to/key.json'
 
         this.baseUrl = 'https://walletobjects.googleapis.com/walletobjects/v1'
         this.batchUrl = 'https://walletobjects.googleapis.com/batch'
@@ -75,7 +75,9 @@ class DemoLoyalty {
      * Create authenticated HTTP client using a service account file.
      */
     auth() {
-        this.credentials = require(this.keyFilePath)
+        console.log('auth log');
+        
+        this.credentials = process.env.GOOGLE_APPLICATION_CREDENTIALS
 
         this.httpClient = new GoogleAuth({
             credentials: this.credentials,
