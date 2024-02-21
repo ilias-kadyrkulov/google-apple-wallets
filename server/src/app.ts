@@ -11,6 +11,10 @@ app.use(cors())
 app.use('/uploads', express.static('uploads'))
 app.use('/loyalty', getLoyaltyRoutes())
 
+app.get('/', (_, res) => {
+    res.json({Shrek: 'shrek'})
+})
+
 app.listen(PORT, () => {
     console.log('Server has started running on port:', PORT)
 })
