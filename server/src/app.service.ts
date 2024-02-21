@@ -77,7 +77,7 @@ class DemoLoyalty {
     auth() {
         console.log('auth log');
         
-        this.credentials = process.env.GOOGLE_APPLICATION_CREDENTIALS
+        this.credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS!)
 
         this.httpClient = new GoogleAuth({
             credentials: this.credentials,
@@ -703,6 +703,8 @@ class DemoLoyalty {
      * @returns {string} An "Add to Google Wallet" link.
      */
     check(): string {
+        console.log('check func');
+        
         return 'working'
     }
     async createJwtNewObjects(
