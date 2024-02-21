@@ -22,7 +22,13 @@ const storage = multer.diskStorage({
 })
 
 // Set up multer with the storage configuration
-const upload = multer({ storage: storage })
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        console.log('Processing file:', file)
+        cb(null, true)
+    },
+})
 
 export const getLoyaltyRoutes = () => {
     const router = Router()
@@ -56,7 +62,8 @@ export const getLoyaltyRoutes = () => {
             console.log(req.body)
             console.log(req.files)
 
-            const { googlePayLogoImage, googlePayHeroImage } = req.files as TFile
+            const { googlePayLogoImage, googlePayHeroImage } =
+                req.files as TFile
 
             const pass = await new DemoLoyalty().createJwtNewObjects(
                 issuerId,
@@ -66,11 +73,12 @@ export const getLoyaltyRoutes = () => {
                 googlePayLogoImage[0].filename,
                 googlePayHeroImage[0].filename,
             )
-            res.json(pass)
 
-            if(!pass) {
-                res.status
+            if (!pass) {
+                res.status(400)
             }
+
+            res.json(pass)
         },
     )
 

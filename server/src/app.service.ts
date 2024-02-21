@@ -75,14 +75,14 @@ class DemoLoyalty {
      * Create authenticated HTTP client using a service account file.
      */
     auth() {
-        console.log('auth log');
-        
         this.credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS!)
 
         this.httpClient = new GoogleAuth({
             credentials: this.credentials,
             scopes: 'https://www.googleapis.com/auth/wallet_object.issuer',
         })
+
+        console.log('auth log');
     }
     // [END auth]
 
