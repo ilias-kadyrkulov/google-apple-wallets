@@ -6,18 +6,18 @@
             "use": "@vercel/node"
         },
         {
-            "source": "uploads/**",
+            "src": "uploads/**",
             "use": "@vercel/static"
         }
     ],
     "routes": [
         {
             "handle": "filesystem",
-            "source": "uploads/(.*)",
+            "src": "uploads/(.*)",
             "destination": "uploads/$1"
         },
         {
-            "source": "/(.*)",
+            "src": "/(.*)",
             "dest": "src/app.ts"
         }
     ]
