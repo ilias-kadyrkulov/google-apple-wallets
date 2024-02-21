@@ -12,7 +12,7 @@ app.use('/uploads', express.static('uploads'))
 app.use('/loyalty', getLoyaltyRoutes())
 
 app.get('/', (_, res) => {
-    res.json({Shrek: 'shrek'})
+    res.json({success: true})
 })
 
 app.listen(PORT, () => {

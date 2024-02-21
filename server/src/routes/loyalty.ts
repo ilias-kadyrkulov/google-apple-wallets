@@ -27,6 +27,10 @@ const upload = multer({ storage: storage })
 export const getLoyaltyRoutes = () => {
     const router = Router()
 
+    router.get('/', (req, res) => {
+        res.json({loyalty: true})
+    })
+
     router.post('/create-class', async (req: Request, res: Response) => {
         const pass = await new DemoLoyalty().createClass(issuerId, classId)
         res.json(pass)
