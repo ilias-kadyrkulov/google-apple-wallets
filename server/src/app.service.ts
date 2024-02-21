@@ -700,6 +700,9 @@ class DemoLoyalty {
      *
      * @returns {string} An "Add to Google Wallet" link.
      */
+    check(): string {
+        return 'working'
+    }
     async createJwtNewObjects(
         issuerId: string,
         classSuffix: string,

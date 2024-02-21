@@ -28,7 +28,7 @@ export const getLoyaltyRoutes = () => {
     const router = Router()
 
     router.get('/', (req, res) => {
-        res.json({loyalty: true})
+        return new DemoLoyalty().check()
     })
 
     router.post('/create-class', async (req: Request, res: Response) => {
@@ -66,6 +66,10 @@ export const getLoyaltyRoutes = () => {
                 googlePayHeroImage[0].filename,
             )
             res.json(pass)
+
+            if(!pass) {
+                res.status
+            }
         },
     )
 
