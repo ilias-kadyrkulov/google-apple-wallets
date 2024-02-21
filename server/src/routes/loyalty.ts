@@ -28,7 +28,8 @@ export const getLoyaltyRoutes = () => {
     const router = Router()
 
     router.get('/', (req, res) => {
-        return new DemoLoyalty().check()
+        const check = new DemoLoyalty().check()
+        res.json(check)
     })
 
     router.post('/create-class', async (req: Request, res: Response) => {
