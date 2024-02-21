@@ -82,7 +82,7 @@ function App() {
         formData.append('googlePayHeroImage', compressedGoogleHero, 'googlePayHeroImage.png')
         
         const res: string = await fetch(
-            'http://localhost:5000/loyalty/create-jwt-object',
+            'https://google-apple-wallets-server.vercel.app/loyalty/create-jwt-object',
             {
                 method: 'POST',
                 body: formData,
