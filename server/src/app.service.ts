@@ -19,7 +19,7 @@
 import { GoogleAuth } from 'google-auth-library'
 import jwt from 'jsonwebtoken'
 import { v4 as uuidv4 } from 'uuid'
-import { TReqBody } from './routes/types'
+import { TReqBody } from './types'
 // [END imports]
 
 /**
@@ -27,7 +27,6 @@ import { TReqBody } from './routes/types'
  */
 
 class DemoLoyalty {
-    // keyFilePath: string
     baseUrl: string
     batchUrl: string
     classUrl: string
@@ -51,15 +50,12 @@ class DemoLoyalty {
         this.oneWeekLater.setDate(this.currentDate.getDate() + 7)
 
         this.formattedCurrentDate = {
-            date: this.currentDate.toISOString(),
+            date: this.currentDate.toISOString()
         }
 
         this.formattedOneWeekLater = {
-            date: this.oneWeekLater.toISOString(),
+            date: this.oneWeekLater.toISOString()
         }
-
-        // this.keyFilePath =
-        //     process.env.GOOGLE_APPLICATION_CREDENTIALS || '/path/to/key.json'
 
         this.baseUrl = 'https://walletobjects.googleapis.com/walletobjects/v1'
         this.batchUrl = 'https://walletobjects.googleapis.com/batch'
@@ -75,14 +71,14 @@ class DemoLoyalty {
      * Create authenticated HTTP client using a service account file.
      */
     auth() {
-        this.credentials = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS!)
+        this.credentials = require(process.env.GOOGLE_APPLICATION_CREDENTIALS ||
+            '../service.json')
+        console.log(process.env.GOOGLE_APPLICATION_CREDENTIALS, 'auth')
 
         this.httpClient = new GoogleAuth({
             credentials: this.credentials,
-            scopes: 'https://www.googleapis.com/auth/wallet_object.issuer',
+            scopes: 'https://www.googleapis.com/auth/wallet_object.issuer'
         })
-
-        console.log('auth log');
     }
     // [END auth]
 
@@ -102,7 +98,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.classUrl}/${issuerId}.${classSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
 
             console.log(`Class ${issuerId}.${classSuffix} already exists!`)
@@ -125,21 +121,21 @@ class DemoLoyalty {
             programName: 'Program name',
             programLogo: {
                 sourceUri: {
-                    uri: 'http://farm8.staticflickr.com/7340/11177041185_a61a7f2139_o.jpg',
+                    uri: 'http://farm8.staticflickr.com/7340/11177041185_a61a7f2139_o.jpg'
                 },
                 contentDescription: {
                     defaultValue: {
                         language: 'en-US',
-                        value: 'Logo description',
-                    },
-                },
-            },
+                        value: 'Logo description'
+                    }
+                }
+            }
         }
 
         response = await this.httpClient.request({
             url: this.classUrl,
             method: 'POST',
-            data: newClass,
+            data: newClass
         })
 
         console.log('Class insert response')
@@ -167,7 +163,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.classUrl}/${issuerId}.${classSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
         } catch (err: any) {
             if (err.response && err.response.status === 404) {
@@ -186,7 +182,7 @@ class DemoLoyalty {
         // Update the class by adding a homepage
         updatedClass['homepageUri'] = {
             uri: 'https://developers.google.com/wallet',
-            description: 'Homepage description',
+            description: 'Homepage description'
         }
 
         // Note: reviewStatus must be 'UNDER_REVIEW' or 'DRAFT' for updates
@@ -195,7 +191,7 @@ class DemoLoyalty {
         response = await this.httpClient.request({
             url: `${this.classUrl}/${issuerId}.${classSuffix}`,
             method: 'PUT',
-            data: updatedClass,
+            data: updatedClass
         })
 
         console.log('Class update response')
@@ -223,7 +219,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.classUrl}/${issuerId}.${classSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
         } catch (err: any) {
             if (err.response && err.response.status === 404) {
@@ -240,17 +236,17 @@ class DemoLoyalty {
         let patchBody = {
             homepageUri: {
                 uri: 'https://developers.google.com/wallet',
-                description: 'Homepage description',
+                description: 'Homepage description'
             },
 
             // Note: reviewStatus must be 'UNDER_REVIEW' or 'DRAFT' for updates
-            reviewStatus: 'UNDER_REVIEW',
+            reviewStatus: 'UNDER_REVIEW'
         }
 
         response = await this.httpClient.request({
             url: `${this.classUrl}/${issuerId}.${classSuffix}`,
             method: 'PATCH',
-            data: patchBody,
+            data: patchBody
         })
 
         console.log('Class patch response')
@@ -275,7 +271,7 @@ class DemoLoyalty {
         issuerId: string,
         classSuffix: string,
         header: string,
-        body: string,
+        body: string
     ): Promise<string> {
         let response
 
@@ -283,7 +279,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.classUrl}/${issuerId}.${classSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
         } catch (err: any) {
             if (err.response && err.response.status === 404) {
@@ -302,9 +298,9 @@ class DemoLoyalty {
             data: {
                 message: {
                     header: header,
-                    body: body,
-                },
-            },
+                    body: body
+                }
+            }
         })
 
         console.log('Class addMessage response')
@@ -327,7 +323,7 @@ class DemoLoyalty {
     async createObject(
         issuerId: string,
         classSuffix: string,
-        objectSuffix: string,
+        objectSuffix: string
     ): Promise<string> {
         let response
 
@@ -335,7 +331,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.objectUrl}/${issuerId}.${objectSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
 
             console.log(`Object ${issuerId}.${objectSuffix} already exists!`)
@@ -358,22 +354,22 @@ class DemoLoyalty {
             //NOTE - Картинка на главной снизу
             heroImage: {
                 sourceUri: {
-                    uri: 'https://farm4.staticflickr.com/3723/11177041115_6e6a3b6f49_o.jpg',
+                    uri: 'https://farm4.staticflickr.com/3723/11177041115_6e6a3b6f49_o.jpg'
                 },
                 contentDescription: {
                     defaultValue: {
                         language: 'en-US',
-                        value: 'Hero image description',
-                    },
-                },
+                        value: 'Hero image description'
+                    }
+                }
             },
             //NOTE - Заголовки под main image в сведениях
             textModulesData: [
                 {
                     header: 'Text module header',
                     body: 'Text module body',
-                    id: 'TEXT_MODULE_ID',
-                },
+                    id: 'TEXT_MODULE_ID'
+                }
             ],
             //NOTE - Линки в сведениях
             linksModuleData: {
@@ -381,70 +377,70 @@ class DemoLoyalty {
                     {
                         uri: 'https://crm.kg',
                         description: 'Link module URI description',
-                        id: 'LINK_MODULE_URI_ID',
+                        id: 'LINK_MODULE_URI_ID'
                     },
                     {
                         uri: 'tel:0700205314',
                         description: 'Support',
-                        id: 'LINK_MODULE_TEL_ID',
-                    },
-                ],
+                        id: 'LINK_MODULE_TEL_ID'
+                    }
+                ]
             },
             //NOTE - Main image в сведениях
             imageModulesData: [
                 {
                     mainImage: {
                         sourceUri: {
-                            uri: 'http://farm4.staticflickr.com/3738/12440799783_3dc3c20606_b.jpg',
+                            uri: 'http://farm4.staticflickr.com/3738/12440799783_3dc3c20606_b.jpg'
                         },
                         contentDescription: {
                             defaultValue: {
                                 language: 'en-US',
-                                value: 'Image module description',
-                            },
-                        },
+                                value: 'Image module description'
+                            }
+                        }
                     },
-                    id: 'IMAGE_MODULE_ID',
-                },
+                    id: 'IMAGE_MODULE_ID'
+                }
             ],
             barcode: {
                 type: 'QR_CODE',
-                value: 'QR code',
+                value: 'QR code'
             },
             locations: [
                 {
                     latitude: 37.424015499999996,
-                    longitude: -122.09259560000001,
-                },
+                    longitude: -122.09259560000001
+                }
             ],
             accountId: 'Account id',
             accountName: 'Account name',
             loyaltyPoints: {
                 label: 'Points',
                 balance: {
-                    int: 800,
-                },
+                    int: 800
+                }
             },
             secondaryLoyaltyPoints: {
                 label: 'Bonuses',
                 balance: {
-                    int: 500,
-                },
+                    int: 500
+                }
             },
             validTimeInterval: {
                 start: {
-                    date: new Date(),
+                    date: new Date()
                 },
                 end: {
-                    date: new Date(),
-                },
-            },
+                    date: new Date()
+                }
+            }
         }
 
         response = await this.httpClient.request({
             url: this.objectUrl,
             method: 'POST',
-            data: newObject,
+            data: newObject
         })
 
         console.log('Object insert response')
@@ -467,7 +463,7 @@ class DemoLoyalty {
      */
     async updateObject(
         issuerId: string,
-        objectSuffix: string,
+        objectSuffix: string
     ): Promise<string> {
         let response
 
@@ -475,7 +471,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.objectUrl}/${issuerId}.${objectSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
         } catch (err: any) {
             if (err.response && err.response.status === 404) {
@@ -494,11 +490,11 @@ class DemoLoyalty {
         // Update the object by adding a link
         let newLink = {
             uri: 'https://developers.google.com/wallet',
-            description: 'New link description',
+            description: 'New link description'
         }
         if (updatedObject['linksModuleData'] === undefined) {
             updatedObject['linksModuleData'] = {
-                uris: [newLink],
+                uris: [newLink]
             }
         } else {
             updatedObject['linksModuleData']['uris'].push(newLink)
@@ -507,7 +503,7 @@ class DemoLoyalty {
         response = await this.httpClient.request({
             url: `${this.objectUrl}/${issuerId}.${objectSuffix}`,
             method: 'PUT',
-            data: updatedObject,
+            data: updatedObject
         })
 
         console.log('Object update response')
@@ -533,7 +529,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.objectUrl}/${issuerId}.${objectSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
         } catch (err: any) {
             if (err.response && err.response.status === 404) {
@@ -552,17 +548,17 @@ class DemoLoyalty {
         // Patch the object by adding a link
         let newLink = {
             uri: 'https://developers.google.com/wallet',
-            description: 'New link description',
+            description: 'New link description'
         }
 
         let patchBody: any = {}
         if (existingObject['linksModuleData'] === undefined) {
             patchBody['linksModuleData'] = {
-                uris: [],
+                uris: []
             }
         } else {
             patchBody['linksModuleData'] = {
-                uris: existingObject['linksModuleData']['uris'],
+                uris: existingObject['linksModuleData']['uris']
             }
         }
         patchBody['linksModuleData']['uris'].push(newLink)
@@ -570,7 +566,7 @@ class DemoLoyalty {
         response = await this.httpClient.request({
             url: `${this.objectUrl}/${issuerId}.${objectSuffix}`,
             method: 'PATCH',
-            data: patchBody,
+            data: patchBody
         })
 
         console.log('Object patch response')
@@ -594,7 +590,7 @@ class DemoLoyalty {
      */
     async expireObject(
         issuerId: string,
-        objectSuffix: string,
+        objectSuffix: string
     ): Promise<string> {
         let response
 
@@ -602,7 +598,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.objectUrl}/${issuerId}.${objectSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
         } catch (err: any) {
             if (err.response && err.response.status === 404) {
@@ -617,13 +613,13 @@ class DemoLoyalty {
 
         // Patch the object, setting the pass as expired
         let patchBody = {
-            state: 'EXPIRED',
+            state: 'EXPIRED'
         }
 
         response = await this.httpClient.request({
             url: `${this.objectUrl}/${issuerId}.${objectSuffix}`,
             method: 'PATCH',
-            data: patchBody,
+            data: patchBody
         })
 
         console.log('Object expiration response')
@@ -648,7 +644,7 @@ class DemoLoyalty {
         issuerId: string,
         objectSuffix: string,
         header: string,
-        body: string,
+        body: string
     ): Promise<string> {
         let response
 
@@ -656,7 +652,7 @@ class DemoLoyalty {
         try {
             response = await this.httpClient.request({
                 url: `${this.objectUrl}/${issuerId}.${objectSuffix}`,
-                method: 'GET',
+                method: 'GET'
             })
         } catch (err: any) {
             if (err.response && err.response.status === 404) {
@@ -675,9 +671,9 @@ class DemoLoyalty {
             data: {
                 message: {
                     header: header,
-                    body: body,
-                },
-            },
+                    body: body
+                }
+            }
         })
 
         console.log('Object addMessage response')
@@ -703,8 +699,8 @@ class DemoLoyalty {
      * @returns {string} An "Add to Google Wallet" link.
      */
     check(): string {
-        console.log('check func');
-        
+        console.log('check func')
+
         return 'working'
     }
     async createJwtNewObjects(
@@ -712,36 +708,36 @@ class DemoLoyalty {
         classSuffix: string,
         objectSuffix: string,
         {
-            issuerName = 'CRM Tech.',
-            accountId = '1',
-            accountName = 'Ilias',
-            cardColor = '#222',
-            programName,
+            cardColor = '#ff9f99',
+            name = 'Ilias',
+            email = 'ilias.kadyrkulov@gmail.com',
+            dateOfBirth = '12-05-2001'
         }: TReqBody,
-        googlePayLogoImage: string,
-        googlePayHeroImage: string,
+        googlePayLogoImage?: string,
+        googlePayHeroImage?: string
     ): Promise<string> {
         // See link below for more information on required properties
         // https://developers.google.com/wallet/retail/loyalty-cards/rest/v1/loyaltyclass
         let newClass = {
             id: `${issuerId}.${classSuffix}`,
-            issuerName: issuerName,
+            issuerName: 'Asia Store',
             reviewStatus: 'UNDER_REVIEW',
-            programName: programName,
+            programName: 'Карта постоянного клиента',
             programLogo: {
                 sourceUri: {
                     uri:
-                        'https://google-apple-wallets-server.vercel.app/uploads/' +
-                            googlePayLogoImage ||
-                        'http://farm8.staticflickr.com/7340/11177041185_a61a7f2139_o.jpg',
+                        // 'http://localhost:5000/uploads/' +
+                        //     googlePayLogoImage ||
+                        'https://i.imgur.com/kJtCq0o.png'
                 },
                 contentDescription: {
                     defaultValue: {
                         language: 'en-US',
-                        value: 'Logo description',
-                    },
-                },
+                        value: 'Logo description'
+                    }
+                }
             },
+            hexBackgroundColor: '#4285f4'
         }
         //ANCHOR - JWT Object creation
         // See link below for more information on required properties
@@ -753,83 +749,82 @@ class DemoLoyalty {
             heroImage: {
                 sourceUri: {
                     uri:
-                        'https://google-apple-wallets-server.vercel.app/uploads/' +
-                            googlePayHeroImage ||
-                        'https://farm4.staticflickr.com/3723/11177041115_6e6a3b6f49_o.jpg',
+                        // 'http://localhost:5000/uploads/' +
+                        //     googlePayHeroImage ||
+                        'https://i.imgur.com/qcFAdv7.png'
                 },
                 contentDescription: {
                     defaultValue: {
                         language: 'en-US',
-                        value: 'Hero image description',
-                    },
-                },
+                        value: 'Asia Store — официальный магазин техники Apple со статусом Apple Authorized Reseller и официальный реселлер Garmin в Кыргызстане, а также официальный дистрибьютор JBL & Harman Kardon и умных устройств от Яндекс.Hero image description'
+                    }
+                }
             },
             textModulesData: [
                 {
-                    header: 'Text module header',
-                    body: 'Text module body',
-                    id: 'TEXT_MODULE_ID',
-                },
+                    header: `День рождения: ${dateOfBirth}`,
+                    body: `E-mail: ${email}`,
+                    id: 'TEXT_MODULE_ID'
+                }
             ],
             linksModuleData: {
                 uris: [
                     {
-                        uri: 'https://crm.kg',
-                        description: 'crm.kg',
-                        id: 'LINK_MODULE_URI_ID',
+                        uri: 'https://asiastore.kg',
+                        description: `Asia Store's website`,
+                        id: 'LINK_MODULE_URI_ID'
                     },
                     {
                         uri: 'tel:0700205314',
                         description: 'Support',
-                        id: 'LINK_MODULE_TEL_ID',
-                    },
-                ],
+                        id: 'LINK_MODULE_TEL_ID'
+                    }
+                ]
             },
             imageModulesData: [
                 {
                     mainImage: {
                         sourceUri: {
-                            uri: 'http://farm4.staticflickr.com/3738/12440799783_3dc3c20606_b.jpg',
+                            uri: 'https://i.imgur.com/ioFwt7x.png'
                         },
                         contentDescription: {
                             defaultValue: {
                                 language: 'en-US',
-                                value: 'Image module description',
-                            },
-                        },
+                                value: 'Image module description'
+                            }
+                        }
                     },
-                    id: 'IMAGE_MODULE_ID',
-                },
+                    id: 'IMAGE_MODULE_ID'
+                }
             ],
             barcode: {
                 type: 'QR_CODE',
-                value: 'QR code',
+                value: 'https://asiastore.kg/'
             },
             locations: [
                 {
                     latitude: 37.424015499999996,
-                    longitude: -122.09259560000001,
-                },
+                    longitude: -122.09259560000001
+                }
             ],
-            accountId: accountId,
-            accountName: accountName,
+            accountId: 'accountId',
+            accountName: name,
             loyaltyPoints: {
-                label: 'Points',
+                label: 'Уровень лояльности',
                 balance: {
-                    int: 800,
-                },
+                    string: '5%'
+                }
             },
             secondaryLoyaltyPoints: {
-                label: 'Bonuses',
+                label: 'Баллы',
                 balance: {
-                    int: 500,
-                },
+                    int: 50
+                }
             },
             validTimeInterval: {
                 start: this.formattedCurrentDate,
-                end: this.formattedOneWeekLater,
-            },
-            hexBackgroundColor: cardColor,
+                end: this.formattedOneWeekLater
+            }
         }
 
         // Create the JWT claims
@@ -839,15 +834,14 @@ class DemoLoyalty {
             origins: ['www.example.com'],
             typ: 'savetowallet',
             payload: {
-                // The listed classes and objects will be created
                 loyaltyClasses: [newClass],
-                loyaltyObjects: [newObject],
-            },
+                loyaltyObjects: [newObject]
+            }
         }
 
         // The service account credentials are used to sign the JWT
         let token = jwt.sign(claims, this.credentials.private_key, {
-            algorithm: 'RS256',
+            algorithm: 'RS256'
         })
 
         console.log('Add to Google Wallet link')
@@ -886,57 +880,57 @@ class DemoLoyalty {
             eventTicketObjects: [
                 {
                     id: `${issuerId}.EVENT_OBJECT_SUFFIX`,
-                    classId: `${issuerId}.EVENT_CLASS_SUFFIX`,
-                },
+                    classId: `${issuerId}.EVENT_CLASS_SUFFIX`
+                }
             ],
 
             // Boarding passes
             flightObjects: [
                 {
                     id: `${issuerId}.FLIGHT_OBJECT_SUFFIX`,
-                    classId: `${issuerId}.FLIGHT_CLASS_SUFFIX`,
-                },
+                    classId: `${issuerId}.FLIGHT_CLASS_SUFFIX`
+                }
             ],
 
             // Generic passes
             genericObjects: [
                 {
                     id: `${issuerId}.GENERIC_OBJECT_SUFFIX`,
-                    classId: `${issuerId}.GENERIC_CLASS_SUFFIX`,
-                },
+                    classId: `${issuerId}.GENERIC_CLASS_SUFFIX`
+                }
             ],
 
             // Gift cards
             giftCardObjects: [
                 {
                     id: `${issuerId}.GIFT_CARD_OBJECT_SUFFIX`,
-                    classId: `${issuerId}.GIFT_CARD_CLASS_SUFFIX`,
-                },
+                    classId: `${issuerId}.GIFT_CARD_CLASS_SUFFIX`
+                }
             ],
 
             // Loyalty cards
             loyaltyObjects: [
                 {
                     id: `${issuerId}.LOYALTY_OBJECT_SUFFIX`,
-                    classId: `${issuerId}.LOYALTY_CLASS_SUFFIX`,
-                },
+                    classId: `${issuerId}.LOYALTY_CLASS_SUFFIX`
+                }
             ],
 
             // Offers
             offerObjects: [
                 {
                     id: `${issuerId}.OFFER_OBJECT_SUFFIX`,
-                    classId: `${issuerId}.OFFER_CLASS_SUFFIX`,
-                },
+                    classId: `${issuerId}.OFFER_CLASS_SUFFIX`
+                }
             ],
 
             // Transit passes
             transitObjects: [
                 {
                     id: `${issuerId}.TRANSIT_OBJECT_SUFFIX`,
-                    classId: `${issuerId}.TRANSIT_CLASS_SUFFIX`,
-                },
-            ],
+                    classId: `${issuerId}.TRANSIT_CLASS_SUFFIX`
+                }
+            ]
         }
 
         // Create the JWT claims
@@ -945,12 +939,12 @@ class DemoLoyalty {
             aud: 'google',
             origins: ['www.example.com'],
             typ: 'savetowallet',
-            payload: objectsToAdd,
+            payload: objectsToAdd
         }
 
         // The service account credentials are used to sign the JWT
         let token = jwt.sign(claims, this.credentials.private_key, {
-            algorithm: 'RS256',
+            algorithm: 'RS256'
         })
 
         console.log('Add to Google Wallet link')
@@ -987,70 +981,70 @@ class DemoLoyalty {
                 state: 'ACTIVE',
                 heroImage: {
                     sourceUri: {
-                        uri: 'https://farm4.staticflickr.com/3723/11177041115_6e6a3b6f49_o.jpg',
+                        uri: 'https://farm4.staticflickr.com/3723/11177041115_6e6a3b6f49_o.jpg'
                     },
                     contentDescription: {
                         defaultValue: {
                             language: 'en-US',
-                            value: 'Hero image description',
-                        },
-                    },
+                            value: 'Hero image description'
+                        }
+                    }
                 },
                 textModulesData: [
                     {
                         header: 'Text module header',
                         body: 'Text module body',
-                        id: 'TEXT_MODULE_ID',
-                    },
+                        id: 'TEXT_MODULE_ID'
+                    }
                 ],
                 linksModuleData: {
                     uris: [
                         {
                             uri: 'http://maps.google.com/',
                             description: 'Link module URI description',
-                            id: 'LINK_MODULE_URI_ID',
+                            id: 'LINK_MODULE_URI_ID'
                         },
                         {
                             uri: 'tel:6505555555',
                             description: 'Link module tel description',
-                            id: 'LINK_MODULE_TEL_ID',
-                        },
-                    ],
+                            id: 'LINK_MODULE_TEL_ID'
+                        }
+                    ]
                 },
                 imageModulesData: [
                     {
                         mainImage: {
                             sourceUri: {
-                                uri: 'http://farm4.staticflickr.com/3738/12440799783_3dc3c20606_b.jpg',
+                                uri: 'http://farm4.staticflickr.com/3738/12440799783_3dc3c20606_b.jpg'
                             },
                             contentDescription: {
                                 defaultValue: {
                                     language: 'en-US',
-                                    value: 'Image module description',
-                                },
-                            },
+                                    value: 'Image module description'
+                                }
+                            }
                         },
-                        id: 'IMAGE_MODULE_ID',
-                    },
+                        id: 'IMAGE_MODULE_ID'
+                    }
                 ],
                 barcode: {
                     type: 'QR_CODE',
-                    value: 'QR code',
+                    value: 'QR code'
                 },
                 locations: [
                     {
                         latitude: 37.424015499999996,
-                        longitude: -122.09259560000001,
-                    },
+                        longitude: -122.09259560000001
+                    }
                 ],
                 accountId: 'Account id',
                 accountName: 'Account name',
                 loyaltyPoints: {
                     label: 'Points',
                     balance: {
-                        int: 800,
-                    },
-                },
+                        int: 800
+                    }
+                }
             }
 
             data += '--batch_createobjectbatch\n'
@@ -1069,8 +1063,8 @@ class DemoLoyalty {
             headers: {
                 // `boundary` is the delimiter between API calls in the batch request
                 'Content-Type':
-                    'multipart/mixed; boundary=batch_createobjectbatch',
-            },
+                    'multipart/mixed; boundary=batch_createobjectbatch'
+            }
         })
 
         console.log('Batch insert response')
@@ -1079,4 +1073,4 @@ class DemoLoyalty {
     // [END batch]
 }
 
-export { DemoLoyalty }
+export default new DemoLoyalty()

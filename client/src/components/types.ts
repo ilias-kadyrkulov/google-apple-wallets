@@ -9,3 +9,10 @@ export type LoyaltyType = {
 export type ColorPickerType = {
     hex: string
 }
+
+export type TForm = {
+    firstName: string
+    lastName: string
+    age: number
+    dateOfBirth: string
+}

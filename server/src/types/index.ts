@@ -1,9 +1,7 @@
-
 export type TReqBody = {
-    issuerName: string
-    accountId: string
-    accountName: string
-    programName: string
+    name: string
+    email: string
+    dateOfBirth: string
     cardColor: string
 }
 
